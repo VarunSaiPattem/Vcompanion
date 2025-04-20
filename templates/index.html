@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VTOP Dashboard</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    h1 { color: #00bcd4; }
+    .card {
+      background: #1e1e1e;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: center;
+    }
+    th { background: #333; }
+  </style>
+</head>
+<body>
+  <h1>📊 VTOP Dashboard</h1>
+
+  <div class="card">
+    <h2>Attendance</h2>
+    <table id="attendanceTable">
+      <thead><tr><th>Subject</th><th>Present</th><th>Total</th><th>%</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Today's Schedule</h2>
+    <table id="scheduleTable">
+      <thead><tr><th>Time</th><th>Subject</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    fetch("/data")
+      .then(res => res.json())
+      .then(data => {
+        const att = data.attendance;
+        const sch = data.schedule;
+
+        const attBody = document.getElementById("attendanceTable").querySelector("tbody");
+        att.forEach(row => {
+          attBody.innerHTML += `<tr>
+            <td>${row.subject}</td>
+            <td>${row.present}</td>
+            <td>${row.total}</td>
+            <td>${row.percentage}</td>
+          </tr>`;
+        });
+
+        const schBody = document.getElementById("scheduleTable").querySelector("tbody");
+        sch.forEach(row => {
+          schBody.innerHTML += `<tr>
+            <td>${row.time}</td>
+            <td>${row.subject}</td>
+          </tr>`;
+        });
+      });
+  </script>
+</body>
+</html>
